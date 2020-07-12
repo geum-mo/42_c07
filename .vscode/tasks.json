@@ -1,0 +1,40 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+​
+		{
+			"type": "shell",
+			"label": "C/C++: gcc build active file",
+			"command": "/usr/bin/gcc",
+			"args": [
+				"-Wall",
+				"-Wextra",
+				"-Werror",
+				"${fileDirname}/main.c",
+				"${file}",
+				"-o",
+				"${fileDirname}/test"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "execute",
+			"command": "cd ${fileDirname} && ./test",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			}
+		}
+​
+	]
+}
