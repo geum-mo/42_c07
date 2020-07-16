@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gekang <gekang@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: gekang <gekang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 16:53:17 by gekang            #+#    #+#             */
-/*   Updated: 2020/07/13 18:27:10 by gekang           ###   ########.fr       */
+/*   Updated: 2020/07/16 14:15:37 by gekang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-int ft_getlen(char *str)
+int ft_get_len(char *str)
 {
 	int i;
 	while (str[i] != 0)
@@ -21,7 +21,29 @@ int ft_getlen(char *str)
 	return (i);
 }
 
-char *ft_create_result(char *buffer, int size, char **strs, char *sep)
+int ft_get_output_len(int size, char **strs, int sep_len)
+{
+	int i;
+	int j;
+	int count;
+
+	i = 0;
+	count = 0;
+	while (i < size)
+	{
+		j = 0;
+		while (strs[i][j] != '\0')
+		{
+			j++;
+			count++;
+		}
+		i++;
+	}
+	count = count + (sep_len * size - 1);
+	return (count);
+}
+
+char *ft_fill_output(char *output, int len, int size, char **strs, char* sep)
 {
 	int i;
 	int j;
@@ -29,80 +51,67 @@ char *ft_create_result(char *buffer, int size, char **strs, char *sep)
 	int l;
 
 	i = 0;
-	k = 0;
-	while (i < size)
+	while (i < len)
 	{
 		j = 0;
-		if (i != 0 || i != size - 1)
+		while (j < size)
 		{
+			k = 0;
+			while (strs[j][k] != '\0')
+				output[i++] = strs[j][k++];
 			l = 0;
+			if (j == size - 1)
+				break ;
 			while (sep[l] != '\0')
-			{
-				buffer[k] = sep[l];
-				l++;
-				k++;
-			}
-		}
-		else
-		{
-			while (strs[i][j] != '\0')
-			{
-				buffer[k] =  strs[i][j];
-				j++;
-				k++;
-			}
+				output[i++] = sep[l++];
+			j++;
 		}
 		i++;
 	}
-	return (buffer);
+	return (output);
 }
 
 char *ft_strjoin(int size, char **strs, char *sep)
 {
 	int i;
-	int str_len;
+	int j;
 	int sep_len;
-	int buffer_len;
-	char *buffer;
-	char *result;
+	int output_len;
+	char *output;
 
+	if (!size)
+		return (output = "");
 	i = 0;
-	printf("%s\n", "check");
-	while (i < size)
-	{
-		str_len += ft_getlen(strs[i]);
-		i++;
-	}
-	sep_len = ft_getlen(sep);
-	buffer_len = str_len + sep_len * (size - 2);
-	buffer = malloc(buffer_len * sizeof(char));
-	//printf("%s\n", "check1");
-	result = ft_create_result(buffer, size, strs, sep);
-	//printf("%s\n", "check2");
-	return (result);
+	j = 0;
+	sep_len = ft_get_len(sep);
+	output_len = ft_get_output_len(size, strs, sep_len);
+	if (!(output = malloc(output_len * sizeof(char))))
+		return (0);
+	return (ft_fill_output(output, output_len, size, strs, sep));
 }
 
 int main(void)
 {
-	int size;
+	int size = 4;
 	char *sep = "||";
 	char *str1 = "aaaaa";
 	char *str2 = "bbbbb";
 	char *str3 = "ccccc";
 	char *str4 = "ddddd";
 	char **strs;
+	int i;
 
-	strs = (char**)malloc(4 * 5 * sizeof(char));
+	if (!(strs = malloc(4 * sizeof(str1))))
+		return (0);
+	i = 0;
 	strs[0] = str1;
 	strs[1] = str2;
 	strs[2] = str3;
 	strs[3] = str4;
-	strs[4] = str4;
-	printf("%s\n", "check");
-	printf("%s\n", strs[0]);
-	printf("%s\n", strs[1]);
-	printf("%s\n", strs[2]);
-	printf("%s\n", strs[3]);
-	printf("%s\n", strs[4]);
+	// printf("%s\n", strs[0]);
+	// printf("%s\n", strs[1]);
+	// printf("%s\n", strs[2]);
+	// printf("%s\n", strs[3]);
 	printf("%s\n", ft_strjoin(size, strs, sep));
+	return (0);
 }
