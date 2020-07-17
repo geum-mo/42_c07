@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_range.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gekang <gekang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gekang <gekang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:37 by gekang            #+#    #+#             */
-/*   Updated: 2020/07/12 22:07:32 by gekang           ###   ########.fr       */
+/*   Updated: 2020/07/17 22:06:07 by gekang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <stdio.h>
 
 int					*ft_range(int min, int max)
 {
@@ -20,18 +19,15 @@ int					*ft_range(int min, int max)
 	unsigned int	i;
 
 	arr = NULL;
-	printf("%s\n", "check1");
 	if (min >= max)
 		return (arr);
 	size = max - min;
-	printf("%s\n", "check2");
-	arr = malloc(size * sizeof(int));
+	if (!(arr = (int *)malloc(size * sizeof(int))))
+		return (0);
 	i = 0;
-	printf("%s\n", "check3");
 	while (i < size)
 	{
-		arr[i] = max - i;
-		printf("%s\n", "check4");
+		arr[i] = max - (size - i);
 		i++;
 	}
 	return (arr);

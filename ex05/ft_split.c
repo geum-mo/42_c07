@@ -3,91 +3,111 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gekang <gekang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gekang <gekang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 14:15:46 by gekang            #+#    #+#             */
-/*   Updated: 2020/07/16 21:28:13 by gekang           ###   ########.fr       */
+/*   Updated: 2020/07/17 10:06:58 by gekang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
 
-int			ft_get_len(char *str)
+char			ft_is_charset(char c, char *charset)
 {
-	int		i;
-
-	while (str[i] != 0)
-		i++;
-	return (i);
-}
-
-void		print_strs(char **strs, int size)
-{
-	int		i;
-	int		j;
+	int i;
 
 	i = 0;
-	while (i < size)
+	while (charset[i])
 	{
-		j = 0;
-		while (strs[i][j] != '\0')
-			printf("%c", strs[i][j++]);
+		if (charset[i] == c)
+			return (1);
 		i++;
 	}
+	return (0);
 }
 
-int			*ft_get_sep_index(char *str, char *charset)
+unsigned int	ft_getsize(char *str, char *charset)
 {
-	int		i;
-	int		j;
-	int		k;
-	int 	*arr;
+	int i;
+	int count;
 
-	if (!(arr = (int*)malloc(ft_get_len(str) * sizeof(int))))
-		return (0);
+	count = 0;
 	i = 0;
-	k = 0;
-	while (*str)
+	if (str[i] && !ft_is_charset(str[i], charset))
 	{
-		j = 0;
-		while (*charset)
-		{
-			if (str[i] == charset[j++])
-			{
-				arr[k] = i;
-				k++;
-				continue ;
-			}
-		}
+		i++;
+		count++;
+	}
+	while (str[i])
+	{
+		if (ft_is_charset(str[i], charset) && str[i + 1]
+				&& !ft_is_charset(str[i + 1], charset))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+char			*ft_strncpy(char *str, unsigned int n)
+{
+	unsigned int	i;
+	char			*arr;
+
+	arr = (char *)malloc(sizeof(char) * (n + 1));
+	arr[n] = 0;
+	i = 0;
+	while (i < n)
+	{
+		arr[i] = str[i];
 		i++;
 	}
 	return (arr);
 }
 
-char		**ft_split(char *str, char *charset)
+void			ft_fill_strs(char *str, char *charset, char **result)
 {
-	char	**strs;
-	int 	*arr;
-	int		size;
-	int		i;
+	int i;
+	int j;
+	int count;
 
-	arr = ft_get_sep_index(str, charset);
-	printf("%s", "check2");
 	i = 0;
-	// if (!(strs = malloc(size * sizeof(char *))))
-	// 	return (0);
-	return (0);
+	j = 1;
+	count = 0;
+	if (str[i] && !ft_is_charset(str[i], charset))
+		j = i++;
+	while (str[i])
+	{
+		if (ft_is_charset(str[i], charset))
+		{
+			if (j < i)
+				result[count++] = ft_strncpy(str + j, i - j);
+			j = i + 1;
+		}
+		i++;
+	}
+	if (j < i)
+		result[count] = ft_strncpy(str + j, i - j);
 }
 
-int			main()
+char			**ft_split(char *str, char *charset)
 {
-	printf("%s", "check1");
-	char	str[100] = "aaaaa||bbbbb-ccccc.-ddddd";
-	char	charset[100] = "|-.";
+	unsigned int	count;
+	char			**arr;
+	unsigned int	len;
 
-	printf("%s", str);
-	printf("%s", charset);
-	ft_split(str, charset);
-	return (0);
+	if (!charset[0])
+	{
+		arr = (char **)malloc(sizeof(char *) * 2);
+		len = 0;
+		while (str[len])
+			len++;
+		arr[0] = ft_strncpy(str, len);
+		arr[1] = 0;
+		return (arr);
+	}
+	count = ft_getsize(str, charset);
+	arr = (char **)malloc(sizeof(char *) * (count + 1));
+	arr[count] = 0;
+	ft_fill_strs(str, charset, arr);
+	return (arr);
 }
