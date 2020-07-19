@@ -6,7 +6,7 @@
 /*   By: gekang <gekang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 11:01:09 by gekang            #+#    #+#             */
-/*   Updated: 2020/07/18 00:03:12 by gekang           ###   ########.fr       */
+/*   Updated: 2020/07/19 09:20:36 by gekang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,26 @@
 int			ft_get_len(char *str)
 {
 	int		i;
+	int		len;
 
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
+	i = 0 - 1;
+	while (str[++i])
+		len = i;
 	return (i);
 }
 
 char		*ft_strdup(char *src)
 {
-	char	*ptr;
+	char	*dest;
 	int		len;
 	int		i;
 
 	len = ft_get_len(src);
-	ptr = malloc(len * sizeof(char));
-	i = 0;
-	while (i < len)
-	{
-		ptr[i] = src[i];
-		i++;
-	}
-	return (ptr);
+	if (!(dest = (char *)malloc(sizeof(char) * len + 1)))
+		return (0);
+	i = 0 - 1;
+	while (++i < len)
+		dest[i] = src[i];
+	dest[i] = '\0';
+	return (dest);
 }
